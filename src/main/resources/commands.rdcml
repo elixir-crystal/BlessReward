@@ -1,0 +1,23 @@
+blessrwd {
+
+    permission bless-reward.cmd
+
+    event string:id {
+        permission bless-reward.cmd.event
+        help Start an event.
+        hook event
+    }
+
+    create string:keyword string:id string:title string:subtitle int:durationSec? double:balance? {
+        permission bless-reward.cmd.create
+        help Create a new event.
+        hook create
+    }
+
+    reload {
+        permission bless-reward.cmd.reload
+        help Reload configuration.
+        hook reload
+    }
+
+}

@@ -1,0 +1,11 @@
+bin/
+target/
+out/
+
+**/*.iml
+.idea/
+.vscode/
+
+dependency-reduced-pom.xml
+
+framework.jpg

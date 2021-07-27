@@ -1,0 +1,9 @@
+name: ${project.name}
+main: io.freeze_dolphin.bless_reward.PlugGividado
+
+api-version: 1.16
+version: ${project.version}
+
+depend:
+  - RedLib
+  - Vault
