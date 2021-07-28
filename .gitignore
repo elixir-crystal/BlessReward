@@ -6,6 +6,10 @@ out/
 .idea/
 .vscode/
 
+.classpath
+.project
+.settings/
+
 dependency-reduced-pom.xml
 
 # framework.jpg

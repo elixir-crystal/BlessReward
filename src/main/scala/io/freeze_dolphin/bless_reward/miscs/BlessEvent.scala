@@ -16,13 +16,7 @@ class BlessEvent(plug: Plugin, id: String, owner: UUID, title: String, subt: Str
             if ( {
                 if (owner != null) !p.getUniqueId.equals(owner) else true
             } && p.hasPermission(PlugGividado.cman.getConfig.getString("perm_participate"))) {
-                p.sendTitle(
-                    title,
-                    subt,
-                    PlugGividado.cman.getConfig.getInt("title_fade_in"),
-                    PlugGividado.cman.getConfig.getInt("title_stay"),
-                    PlugGividado.cman.getConfig.getInt("title_fade_out"))
-
+                p.sendMessage(PlugGividado.getPrefix + title + subt)
                 p.playSound(p.getLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F)
 
                 val lsr = new BlessListener(plug, p.getUniqueId, keyword, reward)
