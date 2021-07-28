@@ -6,14 +6,16 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.{Bukkit, Sound}
 
-class BlessEvent(plug: Plugin, title: String, subt: String, dura: Integer, keyword: String, reward: Double) {
+class BlessEvent(plug: Plugin, id: String, owner: UUID, title: String, subt: String, dura: Integer, keyword: String, reward: Double) {
 
     def start(): Unit = {
+        plug.getLogger.info(s"开始了事件: $id")
         for (plr <- plug.getServer.getOnlinePlayers.toArray) {
             val p = plr.asInstanceOf[Player]
 
-            if (p.hasPermission(PlugGividado.cman.getConfig.getString("perm_participate"))) {
-                p.resetTitle()
+            if ( {
+                if (owner != null) !p.getUniqueId.equals(owner) else true
+            } && p.hasPermission(PlugGividado.cman.getConfig.getString("perm_participate"))) {
                 p.sendTitle(
                     title,
                     subt,
@@ -42,7 +44,7 @@ class BlessRunnable(lsr: BlessListener) extends Runnable {
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import redempt.redlib.misc.EventListener
 
-class BlessListener(plug: Plugin, uid: UUID, key: String, reward: Double) {
+private class BlessListener(plug: Plugin, uid: UUID, key: String, reward: Double) {
 
     private var event: EventListener[AsyncPlayerChatEvent] = _
 
@@ -52,14 +54,12 @@ class BlessListener(plug: Plugin, uid: UUID, key: String, reward: Double) {
 
             val p = evt.getPlayer
             if (p.getUniqueId.equals(uid)) {
-                if (p.hasPermission(PlugGividado.cman.getConfig.getString("perm_participate"))) {
-                    if (evt.getMessage.matches(".*" + key + ".*")) {
-                        if (PlugGividado.eman.hasAccount(p)) {
-                            val r = PlugGividado.eman.depositPlayer(p, reward)
-                            if (r.transactionSuccess()) {
-                                p.sendMessage(PlugGividado.cman.getConfig.getString("msg_reward"))
-                                this.dispose()
-                            }
+                if (evt.getMessage.matches(".*" + key + ".*")) {
+                    if (PlugGividado.eman.hasAccount(p)) {
+                        val r = PlugGividado.eman.depositPlayer(p, reward)
+                        if (r.transactionSuccess()) {
+                            p.sendMessage(PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_reward"))
+                            this.dispose()
                         }
                     }
                 }

@@ -6,19 +6,10 @@ import redempt.redlib.misc.FormatUtils.color
 class ConfigBus {
 
     @ConfigValue("prefix")
-    var prefix: String = color("&f[&e迎新&f] ")
+    var prefix: String = color("&f[&e祝福&f] ")
 
-    @ConfigValue("msg_title")
-    var msg_title: String = color("&b%EVENT%")
-
-    @ConfigValue("msg_subtitle")
-    var msg_subtitle: String = color("&6发送关键词 &e欢迎 &6有几率获得奖励!")
-
-    @ConfigValue("default_duration")
-    var default_duration: Integer = 120
-
-    @ConfigValue("default_reward")
-    var default_reward: Double = 100
+    @ConfigValue("welcome_event_id")
+    var welcome_event_id: String = "welcome"
 
     @ConfigValue("msg_reward")
     var msg_reward: String = color("&a你获得了奖励!")
@@ -30,7 +21,16 @@ class ConfigBus {
     var msg_event_exist: String = color("&c此事件已被注册!")
 
     @ConfigValue("msg_event_not_exist")
-    var msg_event_not_exist: String = color("&c未找到拥有此事件!")
+    var msg_event_not_exist: String = color("&c未找到此事件!")
+
+    @ConfigValue("msg_player_not_exist")
+    var msg_player_not_exist: String = color("&c未找到此玩家!")
+
+    @ConfigValue("msg_event_register")
+    var msg_event_register: String = color("&b已注册!")
+
+    @ConfigValue("msg_event_start")
+    var msg_event_start: String = color("&b已开始事件!")
 
     @ConfigValue("title_fade_in")
     var title_fade_in: Integer = 20

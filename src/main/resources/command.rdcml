@@ -8,7 +8,13 @@ blessrwd {
         hook event
     }
 
-    create string:keyword string:id string:title string:subtitle int:durationSec? double:balance? {
+    welcome string:player {
+        permission bless-reward.cmd.welcome
+        help Start an welcome event.
+        hook welcome
+    }
+
+    create string:id string:keyword string:title string:subtitle int:durationSec double:balance {
         permission bless-reward.cmd.create
         help Create a new event.
         hook create
