@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import redempt.redlib.commandmanager.CommandHook
+import redempt.redlib.misc.FormatUtils.color
 
 class CommandBus {
 
@@ -24,10 +25,11 @@ class CommandBus {
             val keyword = yml.getString("keyword")
             val reward = yml.getDouble("reward")
             val duration = yml.getInt("duration")
+            val msg = yml.getString("message")
             val be = new BlessEvent(PlugGividado.plug, id, sender match {
                 case plr: Player => plr.getUniqueId
                 case _ => null
-            }, title, subtitle, duration, keyword, reward)
+            }, title, subtitle, duration, keyword, reward, msg)
             be.start()
             sender.sendMessage(PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_event_start"))
         } else {
@@ -61,7 +63,8 @@ class CommandBus {
             val keyword = yml.getString("keyword")
             val reward = yml.getDouble("reward")
             val duration = yml.getInt("duration")
-            val be = new BlessEvent(PlugGividado.plug, id, plr.getUniqueId, title, subtitle, duration, keyword, reward)
+            val msg = yml.getString("message")
+            val be = new BlessEvent(PlugGividado.plug, id, plr.getUniqueId, title, subtitle, duration, keyword, reward, msg)
             be.start()
             sender.sendMessage(PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_event_start"))
         } else {
@@ -70,7 +73,7 @@ class CommandBus {
     }
 
     @CommandHook("create")
-    def create(sender: CommandSender, id: String, keyw: String, titl: String, subt: String, dura: Integer, rwd: Double): Unit = {
+    def create(sender: CommandSender, id: String, keyw: String, titl: String, subt: String, dura: Integer, rwd: Double, msg: String): Unit = {
         val storage = new File(PlugGividado.plug.getDataFolder.getPath + File.separator + "storage")
         if (!storage.exists()) storage.mkdirs()
 
@@ -79,11 +82,12 @@ class CommandBus {
             sender.sendMessage(PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_event_exist"))
         } else {
             val yml = YamlConfiguration.loadConfiguration(f)
-            yml.set("title", titl)
-            yml.set("subtitle", subt)
-            yml.set("keyword", keyw)
+            yml.set("title", color(titl))
+            yml.set("subtitle", color(subt))
+            yml.set("keyword", color(keyw))
             yml.set("reward", rwd)
             yml.set("duration", dura)
+            yml.set("message", color(msg))
             yml.save(f)
             sender.sendMessage(PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_event_register"))
         }

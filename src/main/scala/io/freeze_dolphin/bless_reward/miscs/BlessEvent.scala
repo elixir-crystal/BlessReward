@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.{Bukkit, Sound}
 
-class BlessEvent(plug: Plugin, id: String, owner: UUID, title: String, subt: String, dura: Integer, keyword: String, reward: Double) {
+class BlessEvent(plug: Plugin, id: String, owner: UUID, title: String, subt: String, dura: Integer, keyword: String, reward: Double, msg: String) {
 
     def start(): Unit = {
         plug.getLogger.info(s"开始了事件: $id")
@@ -19,7 +19,7 @@ class BlessEvent(plug: Plugin, id: String, owner: UUID, title: String, subt: Str
                 p.sendMessage(PlugGividado.getPrefix + title + subt)
                 p.playSound(p.getLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F)
 
-                val lsr = new BlessListener(plug, p.getUniqueId, keyword, reward)
+                val lsr = new BlessListener(plug, p.getUniqueId, keyword, reward, msg)
                 lsr.init()
                 Bukkit.getScheduler.runTaskLater(plug, new BlessRunnable(lsr), dura * 10L)
             }
@@ -38,7 +38,7 @@ class BlessRunnable(lsr: BlessListener) extends Runnable {
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import redempt.redlib.misc.EventListener
 
-private class BlessListener(plug: Plugin, uid: UUID, key: String, reward: Double) {
+private class BlessListener(plug: Plugin, uid: UUID, key: String, reward: Double, msg: String) {
 
     private var event: EventListener[AsyncPlayerChatEvent] = _
 
@@ -50,11 +50,15 @@ private class BlessListener(plug: Plugin, uid: UUID, key: String, reward: Double
             if (p.getUniqueId.equals(uid)) {
                 if (evt.getMessage.matches(".*" + key + ".*")) {
                     if (PlugGividado.eman.hasAccount(p)) {
-                        val r = PlugGividado.eman.depositPlayer(p, reward)
-                        if (r.transactionSuccess()) {
-                            p.sendMessage(PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_reward"))
-                            this.dispose()
+
+                        val chance: Double = PlugGividado.cman.getConfig.getDouble("reward_chance")
+                        if (Math.random() < chance) {
+                            val r = PlugGividado.eman.depositPlayer(p, reward)
+                            if (r.transactionSuccess()) {
+                                p.sendMessage(if (msg.equals("*")) PlugGividado.getPrefix + PlugGividado.cman.getConfig.getString("msg_reward") else msg)
+                            }
                         }
+                        this.dispose()
                     }
                 }
             }

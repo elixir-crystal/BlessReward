@@ -44,4 +44,7 @@ class ConfigBus {
     @ConfigValue("perm_participate")
     var perm_participate: String = "bless-reward.use.participate"
 
+    @ConfigValue("reward_chance")
+    var reward_chance: Double = 0.4D
+
 }
