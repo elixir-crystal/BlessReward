@@ -16,12 +16,12 @@ import redempt.redlib.misc.FormatUtils.color
 
 object PlugGividado {
 
-    var aman: AuthMeApi = _
-    var plug: Plugin = _
+    var aman: AuthMeApi     = _
+    var plug: Plugin        = _
     var cman: ConfigManager = _
-    var eman: Economy = _
+    var eman: Economy       = _
 
-    def getPrefix: String = color(cman.getConfig.getString("prefix"))
+    def getPrefix: String = color( cman.getConfig.getString( "prefix" ) )
 
 }
 
@@ -33,27 +33,42 @@ class PlugGividado extends JavaPlugin {
         PlugGividado.aman = AuthMeApi.getInstance()
 
         if (!setupEconomy) {
-            getLogger.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription.getName))
-            getServer.getPluginManager.disablePlugin(this)
+            getLogger.severe(
+                String.format(
+                    "[%s] - Disabled due to no Vault dependency found!",
+                    getDescription.getName
+                )
+            )
+            getServer.getPluginManager.disablePlugin( this )
             return
         }
 
-        PlugGividado.cman = new ConfigManager(this).register(new ConfigBus).saveDefaults.load
-        new CommandParser(getResource("command.rdcml")).parse.register(getDescription.getName, new CommandBus)
+        PlugGividado.cman = new ConfigManager( this ).register( new ConfigBus ).saveDefaults.load
+        new CommandParser( getResource( "command.rdcml" ) ).parse
+            .register( getDescription.getName, new CommandBus )
 
-        getLogger.info("Loaded successfully!")
+        getLogger.info( "Loaded successfully!" )
 
-        new EventListener[RegisterEvent](this, classOf[RegisterEvent], (evt: RegisterEvent) => {
-            if (!getServer.dispatchCommand(Bukkit.getConsoleSender, "blessrwd welcome " + evt.getPlayer.getName)) getLogger.warning("Unable to execute welcome event!")
-        })
+        new EventListener[RegisterEvent](
+            this,
+            classOf[RegisterEvent],
+            ( evt: RegisterEvent ) => {
+                if (
+                    !getServer.dispatchCommand(
+                        Bukkit.getConsoleSender,
+                        "blessrwd welcome " + evt.getPlayer.getName
+                    )
+                ) getLogger.warning( "Unable to execute welcome event!" )
+            }
+        )
 
     }
 
     import net.milkbowl.vault.economy.Economy
 
     private def setupEconomy: Boolean = {
-        if (getServer.getPluginManager.getPlugin("Vault") == null) return false
-        val rsp = getServer.getServicesManager.getRegistration(classOf[Economy])
+        if (getServer.getPluginManager.getPlugin( "Vault" ) == null) return false
+        val rsp = getServer.getServicesManager.getRegistration( classOf[Economy] )
         if (rsp == null) return false
         eman = rsp.getProvider
         eman != null

@@ -14,7 +14,7 @@ blessrwd {
         hook welcome
     }
 
-    create string:id string:keyword string:title string:subtitle int:durationSec double:balance string:rewardMessage {
+    create string:id string:keyword string:title string:subtitle int:durationSec string:rewardCommand string:rewardMessage {
         permission bless-reward.cmd.create
         help Create a new event. Leave 'rewardMessage' as '*' to use default message.
         hook create
