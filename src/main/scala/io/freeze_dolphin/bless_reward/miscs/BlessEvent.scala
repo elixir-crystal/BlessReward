@@ -42,8 +42,9 @@ class BlessEvent(
 class BlessRunnable( lsr: BlessListener ) extends Runnable {
 
     override def run(): Unit = {
-        lsr.dispose()
+        if (lsr != null) lsr.dispose()
     }
+
 }
 
 import org.bukkit.event.player.AsyncPlayerChatEvent
@@ -63,27 +64,27 @@ private class BlessListener( plug: Plugin, uid: UUID, key: String, reward: Strin
                 val p = evt.getPlayer
                 if (p.getUniqueId.equals( uid )) {
                     if (evt.getMessage.matches( ".*" + key + ".*" )) {
-                        if (PlugGividado.eman.hasAccount( p )) {
 
-                            val chance: Double =
-                                PlugGividado.cman.getConfig.getDouble( "reward_chance" )
-                            if (Math.random() < chance) {
-                                Bukkit.dispatchCommand(
-                                    Bukkit.getConsoleSender,
+                        val chance: Double =
+                            PlugGividado.cman.getConfig.getDouble( "reward_chance" )
+                        if (Math.random() < chance) {
+                            Bukkit.getScheduler.runTask(
+                                PlugGividado.plug,
+                                new CommandRunnable(
                                     reward
                                         .replaceAll( "%player%", p.getName )
                                         .replaceAll( "%msg%", msg )
                                         .replaceAll( "%key%", key )
                                 )
-                                p.sendMessage(
-                                    if (msg.equals( "*" ))
-                                        PlugGividado.getPrefix + PlugGividado.cman.getConfig
-                                            .getString( "msg_reward" )
-                                    else msg
-                                )
-                            }
-                            this.dispose()
+                            )
+                            p.sendMessage(
+                                if (msg.equals( "*" ))
+                                    PlugGividado.getPrefix + PlugGividado.cman.getConfig
+                                        .getString( "msg_reward" )
+                                else msg
+                            )
                         }
+                        this.dispose()
                     }
                 }
             }
@@ -92,6 +93,17 @@ private class BlessListener( plug: Plugin, uid: UUID, key: String, reward: Strin
 
     def dispose(): Unit = {
         event.unregister()
+    }
+
+}
+
+class CommandRunnable( cmd: String ) extends Runnable {
+
+    override def run(): Unit = {
+        Bukkit.dispatchCommand(
+            Bukkit.getConsoleSender,
+            cmd
+        )
     }
 
 }
