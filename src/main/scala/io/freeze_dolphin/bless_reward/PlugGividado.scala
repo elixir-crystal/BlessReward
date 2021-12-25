@@ -1,10 +1,9 @@
 package io.freeze_dolphin.bless_reward
 
-import fr.xephi.authme.api.v3.AuthMeApi
-import fr.xephi.authme.events.RegisterEvent
 import io.freeze_dolphin.bless_reward.commands.CommandBus
 import io.freeze_dolphin.bless_reward.configs.ConfigBus
 import org.bukkit.Bukkit
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import redempt.redlib.commandmanager.CommandParser
@@ -14,7 +13,6 @@ import redempt.redlib.misc.FormatUtils.color
 
 object PlugGividado {
 
-    var aman: AuthMeApi     = _
     var plug: Plugin        = _
     var cman: ConfigManager = _
 
@@ -27,7 +25,6 @@ class PlugGividado extends JavaPlugin {
     override def onEnable(): Unit = {
 
         PlugGividado.plug = this
-        PlugGividado.aman = AuthMeApi.getInstance()
 
         PlugGividado.cman = new ConfigManager( this ).register( new ConfigBus ).saveDefaults.load
         new CommandParser( getResource( "command.rdcml" ) ).parse
@@ -35,16 +32,19 @@ class PlugGividado extends JavaPlugin {
 
         getLogger.info( "Loaded successfully!" )
 
-        new EventListener[RegisterEvent](
+        new EventListener[PlayerJoinEvent](
             this,
-            classOf[RegisterEvent],
-            ( evt: RegisterEvent ) => {
-                if (
-                    !getServer.dispatchCommand(
-                        Bukkit.getConsoleSender,
-                        "blessrwd welcome " + evt.getPlayer.getName
-                    )
-                ) getLogger.warning( "Unable to execute welcome event!" )
+            classOf[PlayerJoinEvent],
+            ( evt: PlayerJoinEvent ) => {
+
+                if (!evt.getPlayer.hasPlayedBefore) {
+                    if (
+                        !getServer.dispatchCommand(
+                            Bukkit.getConsoleSender,
+                            "blessrwd welcome " + evt.getPlayer.getName
+                        )
+                    ) getLogger.warning( "Unable to execute welcome event!" )
+                }
             }
         )
 
