@@ -1,0 +1,10 @@
+name: BlessReward
+main: bless_reward.PlugGividado
+
+api-version: 1.16
+version: 0.1.3
+
+depend:
+  - RedLib
+  - Vault
+

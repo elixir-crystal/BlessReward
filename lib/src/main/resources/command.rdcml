@@ -1,0 +1,29 @@
+blessrwd {
+
+    permission bless-reward.cmd
+
+    event string:id {
+        permission bless-reward.cmd.event
+        help Start an event.
+        hook event
+    }
+
+    welcome string:player {
+        permission bless-reward.cmd.welcome
+        help Start an welcome event.
+        hook welcome
+    }
+
+    create string:id string:keyword string:title string:subtitle int:durationSec string:rewardCommand string:rewardMessage {
+        permission bless-reward.cmd.create
+        help Create a new event. Leave 'rewardMessage' as '*' to use default message.
+        hook create
+    }
+
+    reload {
+        permission bless-reward.cmd.reload
+        help Reload configuration.
+        hook reload
+    }
+
+}

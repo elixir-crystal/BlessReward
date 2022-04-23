@@ -5,6 +5,8 @@ out/
 **/*.iml
 .idea/
 .vscode/
+.metals/
+.bloop/
 
 .classpath
 .project
@@ -13,3 +15,9 @@ out/
 dependency-reduced-pom.xml
 
 # framework.jpg
+
+# Ignore Gradle project-specific cache directory
+**/.gradle/
+
+# Ignore Gradle build output directory
+build/
